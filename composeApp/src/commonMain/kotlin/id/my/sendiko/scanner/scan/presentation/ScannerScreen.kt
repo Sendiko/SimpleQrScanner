@@ -34,7 +34,7 @@ fun ScannerScreen(
         ScannerWithPermissions(
             modifier = modifier,
             onScanned = { onEvent(ScannerEvent.OnScanned(it)); true },
-            types = listOf(CodeType.QR),
+            types = listOf(CodeType.QR, CodeType.Codabar),
             cameraPosition = CameraPosition.BACK,
             enableTorch = state.usingTorch,
             permissionDeniedContent = {
