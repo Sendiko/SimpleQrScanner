@@ -14,6 +14,7 @@ import id.my.sendiko.scanner.core.ui.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import id.my.sendiko.scanner.core.navigation.AboutDestination
 import simpleqrscanner.composeapp.generated.resources.Res
 import simpleqrscanner.composeapp.generated.resources.ic_info
 import simpleqrscanner.composeapp.generated.resources.ic_qr_code
@@ -25,7 +26,8 @@ import simpleqrscanner.composeapp.generated.resources.scan_qr
 @Composable
 fun ScanQrBar(
     modifier: Modifier = Modifier,
-    isScanning: Boolean = false
+    isScanning: Boolean = false,
+    onNavigate: (Any) -> Unit
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -50,7 +52,7 @@ fun ScanQrBar(
             }
         },
         actions = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { onNavigate(AboutDestination) }) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_info),
                     contentDescription = stringResource(Res.string.info_icon_desc),
@@ -65,6 +67,6 @@ fun ScanQrBar(
 @Composable
 fun ScanQrBarPreview() {
     AppTheme {
-        ScanQrBar()
+        ScanQrBar(onNavigate = {})
     }
 }

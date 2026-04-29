@@ -24,6 +24,7 @@ import id.my.sendiko.scanner.core.ui.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import id.my.sendiko.scanner.core.navigation.ScannerDestination
 import id.my.sendiko.scanner.core.utils.shareContent
 import simpleqrscanner.composeapp.generated.resources.Res
 import simpleqrscanner.composeapp.generated.resources.*
@@ -50,7 +51,13 @@ fun ScanResultScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            ScanQrBar()
+            ScanQrBar(
+                onNavigate = {
+                    if (it == ScannerDestination) {
+                        onScanAnother()
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         Column(

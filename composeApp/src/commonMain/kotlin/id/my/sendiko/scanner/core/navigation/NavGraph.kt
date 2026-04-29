@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import id.my.sendiko.scanner.about.presentation.AboutScreen
 import id.my.sendiko.scanner.core.ui.components.ScanQrBar
 import id.my.sendiko.scanner.core.ui.components.ScannerBottomNavigation
 import id.my.sendiko.scanner.history.presentation.HistoryScreen
@@ -62,14 +63,14 @@ fun NavGraph(
                 onScanAnother = {
                     navController.popBackStack(BottomNavGraph, inclusive = false)
                 },
-                onSave = { viewModel.saveResult(state.result, state.type.name) }
+                onSave = {  }
             )
         }
 
         composable<AboutDestination> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("About Screen")
-            }
+            AboutScreen(
+                onNavigateBack = { navController.navigateUp() }
+            )
         }
     }
 }
@@ -87,9 +88,26 @@ fun BottomNavScreen(
             if (currentDestination?.hasRoute<ScannerDestination>() == true) {
                 val viewModel = koinViewModel<ScannerViewModel>()
                 val state by viewModel.state.collectAsStateWithLifecycle()
-                ScanQrBar(isScanning = state.isScanning)
+                ScanQrBar(
+                    isScanning = state.isScanning,
+                    onNavigate = {
+                        if (it == ScannerDestination) {
+                            navController.navigate(it)
+                        } else {
+                            onNavigateToRoot(it)
+                        }
+                    }
+                )
             } else {
-                ScanQrBar()
+                ScanQrBar(
+                    onNavigate = {
+                        if (it == ScannerDestination) {
+                            navController.navigate(it)
+                        } else {
+                            onNavigateToRoot(it)
+                        }
+                    }
+                )
             }
         },
         bottomBar = {

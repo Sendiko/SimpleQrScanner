@@ -32,7 +32,7 @@ class ScanResultViewModel(
         saveResult(result, type.name)
     }
 
-    fun saveResult(result: String, type: String) {
+    private fun saveResult(result: String, type: String) {
         viewModelScope.launch {
             repository.insertScanResult(result, type)
         }

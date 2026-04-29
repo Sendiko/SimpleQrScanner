@@ -31,4 +31,13 @@
     <string name="filter_contact">Contact</string>
     <string name="history_title">History</string>
     <string name="history_subtitle">Review and manage your past scans</string>
+    <string name="about_title">About</string>
+    <string name="app_version">Version 1.0.0</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="github_repository">GitHub Repository</string>
+    <string name="need_help">Need Help?</string>
+    <string name="support_team_message">Our support team is here for you.</string>
+    <string name="contact_support">Contact Support</string>
+    <string name="back_icon_desc">Back Icon</string>
 </resources>
