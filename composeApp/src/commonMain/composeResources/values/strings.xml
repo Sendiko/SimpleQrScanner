@@ -2,4 +2,27 @@
     <string name="scan_qr">ScanQR</string>
     <string name="qr_code_icon_desc">QR Code Icon</string>
     <string name="info_icon_desc">Info Icon</string>
+    <string name="nav_scan">Scan</string>
+    <string name="nav_history">History</string>
+    <string name="nav_settings">Settings</string>
+    <string name="cvr">the fuck is this?</string>
+    <string name="scan_successful">Scan Successful</string>
+    <string name="found_link">We found a web link in this code.</string>
+    <string name="found_text">We found text in this code.</string>
+    <string name="found_contact">We found contact information in this code.</string>
+    <string name="url_link">URL LINK</string>
+    <string name="text_type">TEXT</string>
+    <string name="contact_type">CONTACT</string>
+    <string name="open_link">Open Link</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="copy">Copy</string>
+    <string name="share">Share</string>
+    <string name="scan_another">Scan Another Code</string>
+    <string name="check_icon_desc">Check Icon</string>
+    <string name="link_icon_desc">Link Icon</string>
+    <string name="text_icon_desc">Text Icon</string>
+    <string name="contact_icon_desc">Contact Icon</string>
+    <string name="copy_icon_desc">Copy Icon</string>
+    <string name="share_icon_desc">Share Icon</string>
+    <string name="open_link_icon_desc">Open Link Icon</string>
 </resources>
