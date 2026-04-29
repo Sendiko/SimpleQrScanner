@@ -8,9 +8,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,6 +24,7 @@ import id.my.sendiko.scanner.core.ui.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import id.my.sendiko.scanner.core.utils.shareContent
 import simpleqrscanner.composeapp.generated.resources.Res
 import simpleqrscanner.composeapp.generated.resources.*
 
@@ -30,8 +35,18 @@ fun ScanResultScreen(
     onOpenLink: (String) -> Unit = {},
     onCopy: (String) -> Unit = {},
     onShare: (String) -> Unit = {},
-    onScanAnother: () -> Unit = {}
+    onScanAnother: () -> Unit = {},
+    onSave: (ResultEvent) -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
+    val clipboardManager = LocalClipboardManager.current
+
+    LaunchedEffect(state.result) {
+        if (state.result.isNotEmpty()) {
+            onSave(ResultEvent.OnSave)
+        }
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -108,7 +123,12 @@ fun ScanResultScreen(
 
             if (state.type == ResultType.LINK || state.type == ResultType.CONTACT) {
                 Button(
-                    onClick = { onOpenLink(state.result) },
+                    onClick = {
+                        if (state.type == ResultType.LINK) {
+                            try { uriHandler.openUri(state.result) } catch (e: Exception) { /* Handle error */ }
+                        }
+                        onOpenLink(state.result)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -146,14 +166,20 @@ fun ScanResultScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 SecondaryButton(
-                    onClick = { onCopy(state.result) },
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(state.result))
+                        onCopy(state.result)
+                    },
                     text = stringResource(Res.string.copy),
                     icon = Res.drawable.ic_copy,
                     contentDescription = stringResource(Res.string.copy_icon_desc),
                     modifier = Modifier.weight(1f)
                 )
                 SecondaryButton(
-                    onClick = { onShare(state.result) },
+                    onClick = {
+                        shareContent(state.result)
+                        onShare(state.result)
+                    },
                     text = stringResource(Res.string.share),
                     icon = Res.drawable.ic_share,
                     contentDescription = stringResource(Res.string.share_icon_desc),
@@ -317,7 +343,8 @@ fun ScanResultScreenPreview() {
             state = ResultState(
                 result = "https://www.google.com",
                 type = ResultType.LINK
-            )
+            ),
+            onSave = { }
         )
     }
 }

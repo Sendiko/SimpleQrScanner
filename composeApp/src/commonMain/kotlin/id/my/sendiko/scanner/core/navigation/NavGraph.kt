@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,10 +20,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import id.my.sendiko.scanner.core.ui.components.ScanQrBar
 import id.my.sendiko.scanner.core.ui.components.ScannerBottomNavigation
+import id.my.sendiko.scanner.history.presentation.HistoryScreen
+import id.my.sendiko.scanner.history.presentation.HistoryViewModel
 import id.my.sendiko.scanner.result.presentation.ScanResultScreen
 import id.my.sendiko.scanner.result.presentation.ScanResultViewModel
 import id.my.sendiko.scanner.scan.presentation.ScannerScreen
 import id.my.sendiko.scanner.scan.presentation.ScannerViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun NavGraph(
@@ -48,9 +50,9 @@ fun NavGraph(
 
         composable<ResultDestination> { backStackEntry ->
             val result = backStackEntry.toRoute<ResultDestination>().result
-            val viewModel = viewModel<ScanResultViewModel>()
+            val viewModel = koinViewModel<ScanResultViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
-            
+
             LaunchedEffect(result) {
                 viewModel.setResult(result)
             }
@@ -59,7 +61,8 @@ fun NavGraph(
                 state = state,
                 onScanAnother = {
                     navController.popBackStack(BottomNavGraph, inclusive = false)
-                }
+                },
+                onSave = { viewModel.saveResult(state.result, state.type.name) }
             )
         }
 
@@ -82,10 +85,12 @@ fun BottomNavScreen(
     Scaffold(
         topBar = {
             if (currentDestination?.hasRoute<ScannerDestination>() == true) {
-                val viewModel = viewModel<ScannerViewModel>()
+                val viewModel = koinViewModel<ScannerViewModel>()
                 val state by viewModel.state.collectAsStateWithLifecycle()
                 ScanQrBar(isScanning = state.isScanning)
-            } else { ScanQrBar() }
+            } else {
+                ScanQrBar()
+            }
         },
         bottomBar = {
             val selectedItem = when {
@@ -114,7 +119,7 @@ fun BottomNavScreen(
             modifier = Modifier.padding(padding)
         ) {
             composable<ScannerDestination> {
-                val viewModel = viewModel<ScannerViewModel>()
+                val viewModel = koinViewModel<ScannerViewModel>()
                 val state by viewModel.state.collectAsStateWithLifecycle()
                 ScannerScreen(
                     state = state,
@@ -124,9 +129,12 @@ fun BottomNavScreen(
             }
 
             composable<HistoryDestination> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("History Screen")
-                }
+                val viewModel = koinViewModel<HistoryViewModel>()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                HistoryScreen(
+                    state = state,
+                    onEvent = viewModel::onEvent
+                )
             }
 
             composable<SettingsDestination> {
