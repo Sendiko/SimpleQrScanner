@@ -1,0 +1,5 @@
+<resources>
+    <string name="scan_qr">ScanQR</string>
+    <string name="qr_code_icon_desc">QR Code Icon</string>
+    <string name="info_icon_desc">Info Icon</string>
+</resources>
